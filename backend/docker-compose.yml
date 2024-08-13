@@ -1,0 +1,68 @@
+version: "3.7"
+
+secrets:
+  MAIN__DB__ROOT__PASSWORD:
+    external: true
+  MAIN__DB__PASSWORD:
+    external: true
+  MAIN__CACHE__PASSWORD:
+    external: true
+
+services:
+  main-db:
+    build:
+      context: ./infra/mysql
+      dockerfile: Dockerfile
+      # args:
+      #   USER_ID: $USER_ID
+    restart: unless-stopped
+    container_name: main-db
+    hostname: main-db
+    labels:
+      - "name=main-db"
+    volumes:
+      - ./data-docker/main-db/mysql:/var/lib/mysql
+      - ./infra/mysql/sql/db-init.sql:/docker-entrypoint-initdb.d/000.db-init.sql
+      - ./ejetool-videoai/ejetool-videoai-domain/src/main/resources/sql/db-init.sql:/docker-entrypoint-initdb.d/000.db-init.sql
+      - ./ejetool-videoai/ejetool-videoai-domain/src/main/resources/sql/videoai-data.sql:/docker-entrypoint-initdb.d/101.videoai-data.sql
+    ports:
+      - "21101:3306"
+    secrets:
+      - MAIN__DB__ROOT__PASSWORD
+      - MAIN__DB__PASSWORD
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MAIN__DB__ROOT__PASSWORD
+      MYSQL_PASSWORD_FILE: /run/secrets/MAIN__DB__PASSWORD
+      MYSQL_DATABASE: ejetool-main
+      MYSQL_USER: ejetool-svc
+
+  main-cache:
+    build:
+      context: ./infra/redis
+      dockerfile: Dockerfile
+      # args:
+      #   USER_ID: $USER_ID
+    container_name: main-cache
+    hostname: main-cache
+    labels:
+      - "name=main-cache"
+    restart: unless-stopped
+    ports:
+      - "21102:6379"
+    secrets:
+      - MAIN__CACHE__PASSWORD
+    environment:
+      REDIS_PASS_FILE: /run/secrets/MAIN__CACHE__PASSWORD
+    volumes:
+      - ./data-docker/main-cache/data:/data
+  main-gateway:
+    image: nginx:alpine
+    container_name: main-gateway
+    hostname: main-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs/main-gateway:/var/log/nginx
+      - ./ejetool-infra/ejetool-nginx-api/conf.d:/etc/nginx/conf.d
+
+    

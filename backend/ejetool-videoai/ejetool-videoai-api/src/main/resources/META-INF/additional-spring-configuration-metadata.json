@@ -1,0 +1,42 @@
+{"properties": [
+  {
+    "name": "openai.api_key",
+    "type": "java.lang.String",
+    "description": "A description for 'openai.api_key'"
+  },
+  {
+    "name": "telegram.bot.token",
+    "type": "java.lang.String",
+    "description": "A description for 'telegram.bot.token'"
+  },
+  {
+    "name": "telegram.bot.default_chat_id",
+    "type": "java.lang.String",
+    "description": "A description for 'telegram.bot.default_chat_id'"
+  },
+  {
+    "name": "google.service_account",
+    "type": "java.lang.String",
+    "description": "A description for 'google.service_account'"
+  },
+  {
+    "name": "useapi.midjourney.discord_token",
+    "type": "java.lang.String",
+    "description": "A description for 'useapi.midjourney.discord_token'"
+  },
+  {
+    "name": "useapi.midjourney.discord_server",
+    "type": "java.lang.String",
+    "description": "A description for 'useapi.midjourney.discord_server'"
+  },
+  {
+    "name": "useapi.midjourney.discord_channel",
+    "type": "java.lang.String",
+    "description": "A description for 'useapi.midjourney.discord_channel'"
+  },
+  {
+    "name": "springdoc.api-servers",
+    "type": "java.lang.String[]",
+    "description": "A description for 'springdoc.api-servers'"
+  }
+]}

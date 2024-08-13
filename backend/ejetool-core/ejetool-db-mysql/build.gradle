@@ -1,0 +1,14 @@
+dependencies {
+	api project(":ejetool-common")
+	
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+	// runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+} 
+
+tasks.named('test') { 
+	useJUnitPlatform()
+}
+  

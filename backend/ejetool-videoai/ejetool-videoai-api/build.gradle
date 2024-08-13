@@ -1,0 +1,61 @@
+plugins {
+	id 'java'
+	id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
+}
+
+dependencies {
+	api project(":ejetool-core-api")
+	api project(":ejetool-videoai-service")
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	testImplementation project(":ejetool-test")
+} 
+
+bootJar {
+	enabled = true
+} 
+
+tasks.named('forkedSpringBootRun') {
+    mustRunAfter ':ejetool-core-api:jar'
+    mustRunAfter ':ejetool-db-mysql:jar'
+    mustRunAfter ':ejetool-jwt:jar'
+    mustRunAfter ':ejetool-common:jar'
+    mustRunAfter ':ejetool-lib-telegram:jar'
+	mustRunAfter ':ejetool-lib-openai:jar'
+    mustRunAfter ':ejetool-cache-redis:jar'
+    mustRunAfter ':ejetool-cache:jar'
+    mustRunAfter ':ejetool-mq-redis:jar'
+    mustRunAfter ':ejetool-mq-kafka:jar'
+    mustRunAfter ':ejetool-mq:jar'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// generateOpenApiDocs
+// https://github.com/springdoc/springdoc-openapi-gradle-plugin#customization
+// ./gradlew ejetool-videoai-api:generateOpenApiDocs -PoutputDir=../../builds -Pserver=http://develop.ejetool.com/videoai
+openApi { 
+	def packageName = 'ejetool-videoai-api'
+	
+	def outputPath = project.findProperty('outputDir') ?: buildDir
+	def serverUrl = project.findProperty('server')
+
+	
+    apiDocsUrl.set("http://localhost:8080/videoai/docs/openapi/${packageName}.json")
+	outputDir.set(file("$outputPath"))
+    outputFileName.set("${packageName}.json")
+
+	def customArgs = ["--openapi"]
+	if (serverUrl) {
+		customArgs << "--springdoc.api-servers=${serverUrl}"
+	}
+	customBootRun {
+		args.set(customArgs)
+	}
+
+	println "output: ${outputPath}/${packageName}.json"
+	waitTimeInSeconds.set(5)
+}

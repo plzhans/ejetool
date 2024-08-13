@@ -1,0 +1,8 @@
+dependencies {
+	api project(":ejetool-common")
+} 
+
+tasks.named('test') { 
+	useJUnitPlatform()
+}
+  

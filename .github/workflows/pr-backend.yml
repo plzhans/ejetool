@@ -1,0 +1,73 @@
+name: pr-backend
+
+on:
+  pull_request:
+    branches: [ master, production ]
+    types:
+      - opened
+      - synchronize
+    paths:
+      - .github/workflows/pr-backend.yml
+      - backend/ejetool-core/**/*
+      - backend/ejetool-lib/**/*
+      - backend/ejetool-client/**/*
+      - backend/ejetool-admin/**/*
+      - backend/ejetool-infra/**/*
+      - backend/ejetool-account/**/*
+      - backend/ejetool-videoai/**/*
+jobs:
+  test-all:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v2
+      - name: Read Java version
+        id: read-java-version
+        run: |
+          JAVA_VERSION=$(cat .java-version)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+          cache-dependency-path: |
+            backend/build.gradle
+            backend/ejetool-core/*/build.gradle
+            backend/ejetool-lib/*/build.gradle
+            backend/ejetool-client/*/build.gradle
+            backend/ejetool-admin/*/build.gradle
+            backend/ejetool-infra/*/build.gradle
+            backend/ejetool-account/*/build.gradle
+            backend/ejetool-videoai/*/build.gradle
+      - name: Gradle dependencies
+        run: chmod +x ./gradlew && ./gradlew dependencies
+      - name: Build
+        run: ./gradlew build -x test
+      - name: Test
+        run:  ./gradlew test -i
+      - name: Test report
+        # https://github.com/marketplace/actions/junit-report-action
+        uses: mikepenz/action-junit-report@v4
+        if: failure()
+        with: 
+          check_name: ejetool-videoai
+          report_paths: |
+            backend/ejetool-core/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-lib/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-client/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-account/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-infra/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-admin/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-videoai/*/build/test-results/test/TEST-*.xml
+          token: ${{ github.token }}
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: junit-test-results
+          path: '**/build/test-results/test/TEST-*.xml'
+          retention-days: 7

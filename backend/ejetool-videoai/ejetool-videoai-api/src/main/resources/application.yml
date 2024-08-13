@@ -1,0 +1,153 @@
+##################################################
+# server
+##################################################
+server:
+  servlet:
+    context-path: /videoai
+  port: 8080
+
+##################################################
+# management : Actuator
+##################################################
+management:
+  server:
+    port: 9090
+  endpoints:
+    #enabled-by-default: false
+    # jmx:
+    #   exposure:
+    #     exclude: '*'
+    web:
+      base-path: /videoai/mmm
+      exposure:
+        # include: info, health
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+
+##################################################
+# spring
+##################################################
+spring:
+  application:
+    name: ejetool-videoai-api
+  # boot:
+  #   admin:
+  #     client:
+  #       url:
+  #         - http://127.0.0.1:9000
+  jpa:
+    hibernate:
+      # values: none, create, create-drop, update, validate
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        # temp:
+        #   "[use_jdbc_metadata_defaults]": false
+  
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ejetool-videoai?useUnicode=true&autoReconnect=true
+    username: 
+    password: 
+  
+  data:
+    redis:
+      host: localhost
+      port: 21102
+
+  jackson:
+      property-naming-strategy: SNAKE_CASE
+
+##################################################
+# auth
+##################################################
+auth:
+  security:
+    iss: ["https://account.ejetool.com"]
+    secret: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+    public_key_path: file:./keys/serivce_auth.pub
+
+##################################################
+# openai
+##################################################
+openai:
+  api_key: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+
+##################################################
+# Telegram
+##################################################
+telegram:
+  bot:
+    token: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+    default_chat_id: 1234
+
+##################################################
+# Useapi
+##################################################
+useapi:
+  api:
+    token: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+  midjourney:
+    discord_token: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+    discord_server: 1234
+    discord_channel: 1234
+
+##################################################
+# Google
+##################################################
+google: 
+  # Link: https://cloud.google.com/iam/docs/service-account-overview?hl=ko
+  service_account: |
+    {
+      "type": "service_account",
+      "project_id": "project_id",
+      "private_key_id": "private_key_id",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nprivate_key\n-----END PRIVATE KEY-----\n",
+      "client_email": "service_account@service_account.iam.gserviceaccount.com",
+      "client_id": "1234",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/service_account%40service_account.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com"
+    }
+
+##################################################
+# doc
+#################################################
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  show-actuator: true
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  # use-fqn: true
+  paths-to-match:
+    - /contents/**
+  api-servers: http://127.0.0.1:8080/videoai
+  api-docs:
+    path: /docs/openapi/${spring.application.name}.json
+  swagger-ui:
+    path: /docs/
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+    urls:
+      - url: /docs/openapi/${spring.application.name}.json
+        name: VideoAI
+  
+##################################################
+# Logger
+##################################################
+logging:
+  level:
+    root: info
+    com:
+      ejetool: info
+  file:
+    name: ./logs/${spring.application.name}/std.log

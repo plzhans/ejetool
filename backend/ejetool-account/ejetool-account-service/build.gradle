@@ -1,0 +1,14 @@
+dependencies {
+	api 'org.springframework.boot:spring-boot-starter-security'
+	
+	api project(":ejetool-account-domain")
+	api project(":ejetool-cache-redis")
+	api project(":ejetool-jwt")
+
+	testImplementation project(":ejetool-test")
+}
+ 
+tasks.named('test') {
+	useJUnitPlatform()
+}
+ 

@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "telegram.bot.token",
+    "type": "java.lang.String",
+    "description": "A description for 'telegram.bot.token'"
+  },
+  {
+    "name": "telegram.bot.default_chat_id",
+    "type": "java.lang.String",
+    "description": "A description for 'telegram.bot.default_chat_id'"
+  },
+  {
+    "name": "openai.api_key",
+    "type": "java.lang.String",
+    "description": "A description for 'openai.api_key'"
+  }
+]}

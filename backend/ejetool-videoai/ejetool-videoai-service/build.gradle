@@ -1,0 +1,20 @@
+dependencies {
+	api 'org.springframework.boot:spring-boot-starter-security'
+	
+	api project(":ejetool-videoai-domain")
+	api project(":ejetool-cache-redis")
+	api project(":ejetool-jwt")
+
+	api project(":ejetool-lib-telegram")
+	api project(":ejetool-lib-openai")
+	api project(":ejetool-videoai-event-publisher")
+
+	testImplementation project(":ejetool-test")
+
+	
+}
+ 
+tasks.named('test') {
+	useJUnitPlatform()
+}
+ 

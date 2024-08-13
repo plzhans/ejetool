@@ -1,0 +1,86 @@
+rootProject.name = 'ejetool-backend'
+
+// lib
+include (':ejetool-lib-openai')
+project (':ejetool-lib-openai').projectDir       = file('ejetool-lib/ejetool-lib-openai')
+include (':ejetool-lib-telegram')
+project (':ejetool-lib-telegram').projectDir     = file('ejetool-lib/ejetool-lib-telegram')
+include (':ejetool-lib-useapi')
+project (':ejetool-lib-useapi').projectDir       = file('ejetool-lib/ejetool-lib-useapi')
+include (':ejetool-lib-speech')
+project (':ejetool-lib-speech').projectDir       = file('ejetool-lib/ejetool-lib-speech')
+include (':ejetool-lib-youtube')
+project (':ejetool-lib-youtube').projectDir      = file('ejetool-lib/ejetool-lib-youtube')
+include (':ejetool-lib-creatomate')
+project (':ejetool-lib-creatomate').projectDir   = file('ejetool-lib/ejetool-lib-creatomate')
+include (':ejetool-lib-socialbuffer')
+project (':ejetool-lib-socialbuffer').projectDir = file('ejetool-lib/ejetool-lib-socialbuffer')
+
+// ejetool-lib
+include (':ejetool-common')
+project (':ejetool-common').projectDir        = file('ejetool-core/ejetool-common')
+include (':ejetool-test')
+project (':ejetool-test').projectDir          = file('ejetool-core/ejetool-test')
+include (':ejetool-db-mysql')
+project (':ejetool-db-mysql').projectDir      = file('ejetool-core/ejetool-db-mysql')
+include (':ejetool-cache')
+project (':ejetool-cache').projectDir         = file('ejetool-core/ejetool-cache')
+include (':ejetool-cache-redis')
+project (':ejetool-cache-redis').projectDir   = file('ejetool-core/ejetool-cache-redis')
+include (':ejetool-cache-ehcache')
+project (':ejetool-cache-ehcache').projectDir = file('ejetool-core/ejetool-cache-ehcache')
+include (':ejetool-core-api')
+project (':ejetool-core-api').projectDir      = file('ejetool-core/ejetool-core-api')
+include (':ejetool-mq')
+project (':ejetool-mq').projectDir            = file('ejetool-core/ejetool-mq')
+include (':ejetool-mq-redis')
+project (':ejetool-mq-redis').projectDir      = file('ejetool-core/ejetool-mq-redis')
+include (':ejetool-mq-kafka')
+project (':ejetool-mq-kafka').projectDir      = file('ejetool-core/ejetool-mq-kafka')
+include (':ejetool-jwt')
+project (':ejetool-jwt').projectDir           = file('ejetool-core/ejetool-jwt')
+ 
+// ejetool-client
+include (':ejetool-videoai-client')
+project (':ejetool-videoai-client').projectDir = file('ejetool-client/ejetool-videoai-client')
+
+// ejetool-infra
+include (':ejetool-gateway-api')
+project (':ejetool-gateway-api').projectDir = file('ejetool-infra/ejetool-gateway-api')
+
+// ejetool-admin
+include (':ejetool-admin-spring')
+project (':ejetool-admin-spring').projectDir = file('ejetool-admin/ejetool-admin-spring')
+
+// ejetool-account
+include (':ejetool-account-common')
+project (':ejetool-account-common').projectDir          = file('ejetool-account/ejetool-account-common')
+include (':ejetool-account-domain')
+project (':ejetool-account-domain').projectDir          = file('ejetool-account/ejetool-account-domain')
+include (':ejetool-account-service')
+project (':ejetool-account-service').projectDir         = file('ejetool-account/ejetool-account-service')
+include (':ejetool-account-api')
+project (':ejetool-account-api').projectDir             = file('ejetool-account/ejetool-account-api')
+ 
+// ejetool-ai 
+include (':ejetool-ai-api')
+project (':ejetool-ai-api').projectDir     = file('ejetool-ai/ejetool-ai-api')
+include (':ejetool-ai-service')
+project (':ejetool-ai-service').projectDir = file('ejetool-ai/ejetool-ai-service')
+
+// ejetool-videoai
+include (':ejetool-videoai-common')
+project (':ejetool-videoai-common').projectDir          = file('ejetool-videoai/ejetool-videoai-common')
+include (':ejetool-videoai-domain')
+project (':ejetool-videoai-domain').projectDir          = file('ejetool-videoai/ejetool-videoai-domain')
+include (':ejetool-videoai-event-publisher')
+project (':ejetool-videoai-event-publisher').projectDir = file('ejetool-videoai/ejetool-videoai-event-publisher')
+include (':ejetool-videoai-event-consumer')
+project (':ejetool-videoai-event-consumer').projectDir  = file('ejetool-videoai/ejetool-videoai-event-consumer')
+include (':ejetool-videoai-service')
+project (':ejetool-videoai-service').projectDir         = file('ejetool-videoai/ejetool-videoai-service')
+include (':ejetool-videoai-api')
+project (':ejetool-videoai-api').projectDir             = file('ejetool-videoai/ejetool-videoai-api')
+include (':ejetool-videoai-chatbot')
+project (':ejetool-videoai-chatbot').projectDir         = file('ejetool-videoai/ejetool-videoai-chatbot')
+

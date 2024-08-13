@@ -1,0 +1,64 @@
+##################################################
+# spring 
+##################################################
+spring:
+  application:
+    name: ejetool-videoai-chatbot
+  jmx:
+    enabled: true
+  # boot:
+  #   admin:
+  #     client:
+  #       url:
+  #         - http://127.0.0.1:9000
+
+##################################################
+# management : Actuator
+##################################################
+management:
+  
+  server:
+    port: 9090
+  endpoints:
+    #enabled-by-default: false
+    jmx:
+      exposure:
+        #exclude: '*'
+        include: '*'
+    web:
+      base-path: /mmm
+      exposure:
+        # include: info, health
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+
+##################################################
+# ejetool
+##################################################
+ejetool:
+  host: http://127.0.0.1:8080
+  api_key: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+
+##################################################
+# telegram
+##################################################
+telegram:
+  bot:
+    token: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
+    default_chat_id: 1234
+    admin_ids: 1234
+
+##################################################
+# Logger
+##################################################
+logging:
+  level:
+    root: info
+    com:
+      ejetool: info
+  file:
+    name: ./logs/${spring.application.name}/std.log

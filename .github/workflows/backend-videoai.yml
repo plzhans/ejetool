@@ -1,0 +1,263 @@
+name: backend-videoai
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master, production ]
+    paths:
+      - .github/workflows/backend-videoai.yml
+      - backend/.gitignore
+      - backend/.java-version
+      - backend/build.gradle
+      - backend/settings.gradle
+      - backend/gradle/**/*
+      - backend/ejetool-core/**/*
+      - backend/ejetool-lib/**/*
+      - backend/ejetool-client/**/*
+      - backend/ejetool-videoai/**/*
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  ENVIRONMENT: ${{ 
+    github.ref_name == 'main' && 'develop' ||
+    github.ref_name == 'master' && 'develop' || 
+    github.ref_name == 'production' && 'production' || 
+    github.ref_name }}
+jobs:
+  # job의 이름
+  build-videoai:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read Java version
+        run: |
+          JAVA_VERSION=$(cat .java-version)
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: gradle
+          cache-dependency-path: |
+            backend/build.gradle
+            backend/ejetool-core/*/build.gradle
+            backend/ejetool-lib/*/build.gradle
+            backend/ejetool-client/*/build.gradle
+            backend/ejetool-videoai/*/build.gradle
+      - name: Gradle dependencies
+        run: chmod +x ./gradlew && ./gradlew dependencies
+      - name: Test
+        run:  ./gradlew test -i
+      - name: Test report
+        # https://github.com/marketplace/actions/junit-report-action
+        uses: mikepenz/action-junit-report@v4
+        #if: failure()
+        with: 
+          check_name: ejetool-videoai
+          report_paths: |
+            backend/ejetool-core/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-lib/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-client/*/build/test-results/test/TEST-*.xml
+            backend/ejetool-videoai/*/build/test-results/test/TEST-*.xml
+          token: ${{ github.token }}
+      - name: Build
+        run: |
+          ./gradlew \
+            ejetool-videoai-api:build \
+            ejetool-videoai-chatbot:build \
+            ejetool-videoai-event-consumer:build \
+            -x test -i -Prelease -DoutputDir=../builds
+          ls -al ../builds
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        #if: failure()
+        with:
+          name: junit-test-results
+          path: '**/build/test-results/test/TEST-*.xml'
+          retention-days: 7
+      - name: If build fails, notify
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.BUILD_NOTIFY_TELEGRAM_TO }}
+          token: ${{ secrets.BUILD_NOTIFY_TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            \[${{ github.repository }}\] Build fail.
+            > actor : *${{ github.actor }}*
+            > ref_name : *${{ github.ref_name }}*
+            > ref_commit : ${{ github.sha }}
+        if: failure()
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: builds-ejetool-videoai
+          if-no-files-found: error
+          retention-days: 1
+          path: |
+            builds/*
+
+  docker-build-videoai:
+    runs-on: ubuntu-latest
+    needs: build-videoai
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: builds-ejetool-videoai
+          path: builds
+      - name: File list
+        run: find .
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{env.DOCKER_REGISTRY}}
+          username: ${{github.repository_owner}}
+          password: ${{secrets.GHCR_WRITE_TOKEN}}
+      - name: Docker Build - ejetool-videoai-api
+        uses: docker/build-push-action@v5
+        with:
+          file: ./builds/ejetool-videoai-api.Dockerfile
+          context: .
+          push: true
+          tags: >
+            ${{env.DOCKER_REGISTRY}}/${{github.repository}}/ejetool-videoai-api:${{env.ENVIRONMENT}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Docker Build - ejetool-videoai-event-consumer
+        uses: docker/build-push-action@v5
+        with:
+          file: ./builds/ejetool-videoai-event-consumer.Dockerfile
+          context: .
+          push: true
+          tags: >
+            ${{env.DOCKER_REGISTRY}}/${{github.repository}}/ejetool-videoai-event-consumer:${{env.ENVIRONMENT}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Docker Build - ejetool-videoai-chatbot
+        uses: docker/build-push-action@v5
+        with:
+          file: ./builds/ejetool-videoai-chatbot.Dockerfile
+          context: .
+          push: true
+          tags: >
+            ${{env.DOCKER_REGISTRY}}/${{github.repository}}/ejetool-videoai-chatbot:${{env.ENVIRONMENT}}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  
+  deploy-videoai-api:
+    environment: develop
+    if: github.ref_name == 'master'
+    runs-on: [self-hosted, service-develop]
+    needs: docker-build-videoai
+    env:
+      APPLICATION_YML: ${{secrets.BACKEND__VIDEOAI_API_APPLICATION_YML}}
+      KEYS_SERVICE_AUTH_PUB: ${{secrets.BACKEND__ACCOUNT_KEYS_SERVICE_AUTH_PUB}}
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{env.DOCKER_REGISTRY}}
+          username: ${{github.repository_owner}}
+          password: ${{secrets.GHCR_READ_TOKEN}}
+      - name: Env Init
+        run: |
+          echo "DOCKER_NETWORK=${{env.ENVIRONMENT}}-ejetool" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=${{github.repository}}/ejetool-videoai-api:${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=ejetool-videoai-api-${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+      - name: Docker Image Remove
+        run: |
+          docker stop ${DOCKER_CONTAINER_NAME} || true
+          docker rmi $(docker images ${DOCKER_REGISTRY}/${DOCKER_IMAGE} -q) || true
+      - name: Docker Image Pull
+        run: docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+      - name: Service Config export
+        run: |
+          echo "" > .env
+          echo "${APPLICATION_YML}" > ./application-production.yml
+          echo "${KEYS_SERVICE_AUTH_PUB}" > ./serivce_auth.pub
+      - name: Network Create
+        run: |
+          docker network create ${DOCKER_NETWORK} || true
+      # synology dind : volume(x) -> docker cp
+      - name: Service Create
+        run: |
+          docker rm ${DOCKER_CONTAINER_NAME} || true
+          docker create --name ${DOCKER_CONTAINER_NAME} \
+            --env-file .env \
+            --dns 8.8.8.8 \
+            --add-host=host.docker.internal:host-gateway \
+            --network ${DOCKER_NETWORK} \
+            -p 28085:8080 \
+            ${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+          docker cp ./serivce_auth.pub $DOCKER_CONTAINER_NAME:/app/keys/serivce_auth.pub
+          docker cp ./application-production.yml $DOCKER_CONTAINER_NAME:/app/config/
+      - name: Service Run
+        run: |
+          docker start ${DOCKER_CONTAINER_NAME}
+          docker ps -f "name=${DOCKER_CONTAINER_NAME}"
+      - name: Service Logs
+        run: docker logs --tail 10 ${DOCKER_CONTAINER_NAME}
+
+  deploy-videoai-chatbot:
+    environment: develop
+    if: github.ref_name == 'master'
+    runs-on: [self-hosted, service-develop]
+    needs: docker-build-videoai
+    env:
+      APPLICATION_YML: ${{secrets.BACKEND__VIDEOAI_CHATBOT_APPLICATION_YML}}
+      KEYS_SERVICE_AUTH_PUB: ${{secrets.BACKEND__ACCOUNT_KEYS_SERVICE_AUTH_PUB}}
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ${{env.DOCKER_REGISTRY}}
+          username: ${{github.repository_owner}}
+          password: ${{secrets.GHCR_READ_TOKEN}}
+      - name: Env Init
+        run: |
+          echo "DOCKER_NETWORK=${{env.ENVIRONMENT}}-ejetool" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=${{github.repository}}/ejetool-videoai-chatbot:${{vars.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=ejetool-videoai-chatbot-${{vars.ENVIRONMENT}}" >> $GITHUB_ENV
+      - name: Docker Image Remove
+        run: |
+          docker stop ${DOCKER_CONTAINER_NAME} || true
+          docker rmi $(docker images ${DOCKER_REGISTRY}/${DOCKER_IMAGE} -q) || true
+      - name: Docker Image Pull
+        run: docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+      - name: Service Config export
+        run: |
+          echo "" > .env
+          echo "${APPLICATION_YML}" > ./application-production.yml
+          echo "${KEYS_SERVICE_AUTH_PUB}" > ./serivce_auth.pub
+      - name: Network Create
+        run: |
+          docker network create ${DOCKER_NETWORK} || true
+      # synology dind : volume(x) -> docker cp
+      - name: Service Create
+        run: |
+          docker rm ${DOCKER_CONTAINER_NAME} || true
+          docker create --name ${DOCKER_CONTAINER_NAME} \
+            --env-file .env \
+            --dns 8.8.8.8 \
+            --add-host=host.docker.internal:host-gateway \
+            --network ${DOCKER_NETWORK} \
+            -p 28086:8080 \
+            ${DOCKER_REGISTRY}/${DOCKER_IMAGE}
+          docker cp ./serivce_auth.pub $DOCKER_CONTAINER_NAME:/app/keys/serivce_auth.pub
+          docker cp ./application-production.yml $DOCKER_CONTAINER_NAME:/app/config/
+      - name: Service Run
+        run: |
+          docker start ${DOCKER_CONTAINER_NAME}
+          docker ps -f "name=${DOCKER_CONTAINER_NAME}"
+      - name: Service Logs
+        run: docker logs --tail 10 ${DOCKER_CONTAINER_NAME}

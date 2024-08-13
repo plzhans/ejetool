@@ -1,0 +1,10 @@
+dependencies {
+	api 'org.springframework.boot:spring-boot-starter-data-jpa'
+	
+	api project(":ejetool-db-mysql")
+	api project(":ejetool-account-common")
+} 
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

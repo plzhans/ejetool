@@ -1,0 +1,9 @@
+dependencies {
+	api project(":ejetool-cache")
+	api 'org.springframework.boot:spring-boot-starter-data-redis'
+} 
+
+tasks.named('test') { 
+	useJUnitPlatform()
+}
+   

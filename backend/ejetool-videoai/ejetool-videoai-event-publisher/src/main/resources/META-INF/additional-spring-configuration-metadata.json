@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "topic.videoai.content-created",
+    "type": "java.lang.String",
+    "description": "A description for 'topic.videoai.content-created'"
+  },
+  {
+    "name": "openai.api_key",
+    "type": "java.lang.String",
+    "description": "A description for 'openai.api_key'"
+  },
+  {
+    "name": "telegram.bot.default_chat_id",
+    "type": "java.lang.String",
+    "description": "A description for 'telegram.bot.default_chat_id'"
+  },
+  {
+    "name": "useapi.api.token",
+    "type": "java.lang.String",
+    "description": "A description for 'useapi.api.token'"
+  }
+]}

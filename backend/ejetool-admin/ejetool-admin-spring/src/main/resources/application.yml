@@ -1,0 +1,81 @@
+##################################################
+# server
+##################################################
+server:
+  port: 9000
+
+##################################################
+# spring
+##################################################
+spring:
+  application:
+    name: ejetool-admin-spring
+  security:
+    user:
+      name: xadmin
+      password: xadmin
+  boot:
+    admin:
+      # context-path: /admin
+      ui:
+        #public-url: https://custom.domain.com/admin
+        poll-timer:
+          logfile: 30000 
+      client:
+        instance:
+          #service-url: http://localhost:9000
+          metadata:
+            user:
+              name: xadmin
+              password: xadmin
+        username: xadmin
+        password: xadmin
+        url: 
+          - http://localhost:9000
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: http://localhost:8081/
+          predicates:
+            - Path=/auth/**
+        - id: second-service
+          uri: http://localhost:8085/
+          predicates:
+            - Path=/videoai/**
+
+##################################################
+# eureka
+##################################################
+# eureka:
+#   client:
+#     register-with-eureka: false
+#     fetch-registry: false
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka
+
+
+##################################################
+# management
+##################################################
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  security:
+    enabled: true
+
+##################################################
+# Logger
+##################################################
+logging:
+  level:
+    root: info
+    com:
+      ejetool: info
+  file:
+    name: ./logs/${spring.application.name}/std.log

@@ -1,0 +1,19 @@
+dependencies {
+	api project(":ejetool-lib-useapi") 
+	api project(":ejetool-lib-speech")
+	api project(":ejetool-lib-youtube")
+	api project(":ejetool-lib-creatomate")
+	api project(":ejetool-lib-telegram")
+	api project(":ejetool-cache-redis")
+	api project(":ejetool-cache-ehcache")
+	api project(":ejetool-videoai-domain") 
+	api project(":ejetool-videoai-event-publisher")
+} 
+
+bootJar {
+	enabled = true
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,15 @@
+dependencies {
+	// api 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+	api 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	testRuntimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    testRuntimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	api project(":ejetool-common")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'org.springframework:spring-web:6.1.8'
+    implementation 'com.google.api-client:google-api-client:2.0.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    api 'com.google.apis:google-api-services-youtube:v3-rev20240514-2.0.0'
+
+    api project(":ejetool-lib-socialbuffer")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+

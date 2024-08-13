@@ -1,0 +1,10 @@
+dependencies {
+	api project(":ejetool-common")
+
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation 'de.codecentric:spring-boot-admin-client:3.3.3'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

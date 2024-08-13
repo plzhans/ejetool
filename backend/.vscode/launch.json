@@ -1,0 +1,34 @@
+// {
+//     "configurations": [
+//         {
+//             "type": "java",
+//             "name": "ejetool-videoai-api",
+//             "request": "launch",
+//             "cwd": "${workspaceFolder}",
+//             "mainClass": "com.ejetool.videoai.api.EjetoolVideoaiApiApplication",
+//             "projectName": "ejetool-videoai-api",
+//             "args": "",
+//             "envFile": "${workspaceFolder}/.env"
+//         },
+//         {
+//             "type": "java",
+//             "name": "ejetool-videoai-chatbot",
+//             "request": "launch",
+//             "cwd": "${workspaceFolder}",
+//             "mainClass": "com.ejetool.videoai.chatbot.EjetoolVideoaiChatbotApplication",
+//             "projectName": "ejetool-videoai-chatbot",
+//             "args": "",
+//             "envFile": "${workspaceFolder}/.env"
+//         },
+//         {
+//             "type": "java",
+//             "name": "ejetool-videoai-event-consumer",
+//             "request": "launch",
+//             "cwd": "${workspaceFolder}",
+//             "mainClass": "com.ejetool.videoai.event.consumer.EjetoolVideoaiEventConsumerApplication",
+//             "projectName": "ejetool-videoai-event-consumer",
+//             "args": "",
+//             "envFile": "${workspaceFolder}/.env"
+//         }
+//     ]
+// }

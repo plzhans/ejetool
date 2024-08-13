@@ -1,0 +1,9 @@
+dependencies {
+	api 'org.telegram:telegrambots:6.9.7.1'
+	
+	api project(":ejetool-common")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

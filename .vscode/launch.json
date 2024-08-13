@@ -1,0 +1,54 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "ejetool-videoai-api",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.videoai.api.EjetoolVideoaiApiApplication",
+            "projectName": "ejetool-videoai-api",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/.env",
+        },
+        {
+            "type": "java",
+            "name": "ejetool-videoai-chatbot",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.videoai.chatbot.EjetoolVideoaiChatbotApplication",
+            "projectName": "ejetool-videoai-chatbot",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "type": "java",
+            "name": "ejetool-videoai-event-consumer",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.videoai.event.consumer.EjetoolVideoaiEventConsumerApplication",
+            "projectName": "ejetool-videoai-event-consumer",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "type": "java",
+            "name": "ejetool-admin-spring",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.admin.spring.EjetoolAdminSpringApplication",
+            "projectName": "ejetool-admin-spring",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/.env"
+        },
+        {
+            "type": "java",
+            "name": "ejetool-gateway-api",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.gateway.api.EjetoolGatewayApiApplication",
+            "projectName": "ejetool-gateway-api",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/.env"
+        }
+    ]
+}

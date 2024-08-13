@@ -1,0 +1,10 @@
+dependencies {
+	api project(":ejetool-cache")
+	implementation 'org.ehcache:ehcache:3.10.8'
+
+} 
+
+tasks.named('test') { 
+	useJUnitPlatform()
+}
+   

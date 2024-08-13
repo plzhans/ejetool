@@ -1,0 +1,10 @@
+version: "3.7"
+
+secrets:
+  MAIN__DB__ROOT__PASSWORD:
+    file: ./secrets.fake
+  MAIN__DB__PASSWORD:
+    file: ./secrets.fake
+  MAIN__CACHE__PASSWORD:
+    file: ./secrets.fake
+  

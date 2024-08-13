@@ -1,0 +1,51 @@
+##################################################
+# server
+##################################################
+server:
+  port: 8000
+
+##################################################
+# spring
+##################################################
+spring:
+  application:
+    name: ejetool-gateway-api
+  # boot:
+  #   admin:
+  #     client:
+  #       url:
+  #         - http://127.0.0.1:9000
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: http://localhost:8081/
+          predicates:
+            - Path=/auth/**
+        - id: second-service
+          uri: http://localhost:8085/
+          predicates:
+            - Path=/videoai/**
+
+##################################################
+# eureka
+##################################################
+# eureka:
+#   client:
+#     register-with-eureka: false
+#     fetch-registry: false
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka
+
+
+##################################################
+# management
+##################################################
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true

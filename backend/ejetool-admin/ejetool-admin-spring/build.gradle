@@ -1,0 +1,20 @@
+plugins {
+	id 'java'
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'de.codecentric:spring-boot-admin-client:3.2.3'
+	implementation 'de.codecentric:spring-boot-admin-starter-server:3.2.3'
+    // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+} 
+
+bootJar {
+	enabled = true
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

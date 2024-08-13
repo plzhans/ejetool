@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="SwaggerUI" />
+        <title>Docs :: Ejetool API Guide</title>
+        <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.3.1/swagger-ui.css" />
+        <link rel="stylesheet" href="./css/swagger/theme-flattop.css" />
+        <script src="https://unpkg.com/swagger-ui-dist@5.3.1/swagger-ui-bundle.js" crossorigin></script>
+        <script src="https://unpkg.com/swagger-ui-dist@5.3.1/swagger-ui-standalone-preset.js" crossorigin></script>
+        <script>
+
+            var swaggerUrl = [
+            {
+                "name": "VideoAI",
+                "url": "http://api.develop.ejetool.com/videoai/docs/openapi/ejetool-videoai-api.json"
+            },
+            ];
+
+            var oauthConfigObject = {
+                "clientId" : "test-clinet",
+                "appName" : "test-app",
+                "scopeSeparator" : " ",
+                "scopes" : [],
+                "useBasicAuthenticationWithAccessCodeGrant":false,
+                "usePkceWithAuthorizationCodeGrant":false
+            };
+            
+            window.onload = () => {
+                var ui = SwaggerUIBundle({
+                    dom_id: '#swagger-ui',
+                    //deepLinking: true,
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    plugins: [
+                        SwaggerUIBundle.plugins.DownloadUrl
+                    ],
+                    layout: "StandaloneLayout",
+                    urls: swaggerUrl,
+                    "urls.primaryName": "VideoAI"
+                });
+                ui.initOAuth(oauthConfigObject);
+                
+                window.ui = ui
+            };
+        </script>
+    </head>
+    <body>
+        <div id="swagger-ui"></div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+##################################################
+# auth
+##################################################
+auth:
+  security:
+    public_key_path: file:../ejetool-account-api/src/main/resources/keys/serivce_auth.pub
+    

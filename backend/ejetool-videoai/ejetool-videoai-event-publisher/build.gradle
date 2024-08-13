@@ -1,0 +1,8 @@
+dependencies {
+	api project(":ejetool-mq-redis")
+	api project(":ejetool-mq-kafka")
+} 
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

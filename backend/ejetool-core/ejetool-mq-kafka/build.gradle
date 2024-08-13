@@ -1,0 +1,10 @@
+dependencies {
+	api 'org.springframework.kafka:spring-kafka'
+	
+	api project(":ejetool-mq")
+}
+
+tasks.named('test') { 
+	useJUnitPlatform()
+}
+  
