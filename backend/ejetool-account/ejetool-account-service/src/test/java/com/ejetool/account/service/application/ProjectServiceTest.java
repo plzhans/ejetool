@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -12,25 +14,39 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.ejetool.common.io.support.YamlPropertySourceFactory;
 import com.ejetool.jwt.generator.JwtKeyStoreGenerator;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import com.ejetool.account.service.dto.project.CreateProjectApiKeyParam;
 
 @SpringJUnitConfig(ProjectServiceTest.Config.class)
 @TestPropertySource(locations = "file:../ejetool-account-api/src/main/resources/application.yml", factory = YamlPropertySourceFactory.class)
 @ContextConfiguration
 class ProjectServiceTest {
-
     @TestConfiguration
+    @EnableConfigurationProperties(AuthSecuritySettings.class)
     static class Config{
+        
+    }
+
+    @Getter @Setter
+    @ConfigurationProperties("auth.security")
+    static class AuthSecuritySettings{
+
+        @Value("${auth.security.issuer}")
+        private String issuer;
+
         @Value("${auth.security.secret}")
-        private String authSecuritySecret;
+        private String secret;
     }
 
     @Autowired
-    private Config config;
+    private AuthSecuritySettings settings;
 
     private JwtKeyStoreGenerator jwtKeyStoreGenerator(){
-        JwtKeyStoreGenerator generator =  new JwtKeyStoreGenerator();
-        generator.addSecretKey(this.config.authSecuritySecret, "s");
+        JwtKeyStoreGenerator generator = JwtKeyStoreGenerator.build(o->o.setIssuer(this.settings.getIssuer()));
+        generator.addSecretKey(this.settings.getSecret(), "s");
         return generator;
     }
 

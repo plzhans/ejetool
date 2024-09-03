@@ -35,7 +35,13 @@ public class JwtKeyStoreValidator {
     @Getter
     protected final Map<String,Key> store;
 
-    public JwtKeyStoreValidator(){
+    public static JwtKeyStoreValidator build(Consumer<JwtKeyStoreValidatorOptions> options){
+        var JwtKeyStoreValidatorOptions = new JwtKeyStoreValidatorOptions();
+        options.accept(JwtKeyStoreValidatorOptions);
+        return new JwtKeyStoreValidator(JwtKeyStoreValidatorOptions);
+    }
+
+    public JwtKeyStoreValidator(JwtKeyStoreValidatorOptions options){
         this.store = new HashMap<>();
     }
 

@@ -69,7 +69,7 @@ spring:
 ##################################################
 auth:
   security:
-    iss: ["https://account.ejetool.com"]
+    allowed_issuers: https://www.ejetool.com
     secret: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
     public_key_path: file:./keys/serivce_auth.pub
 

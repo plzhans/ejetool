@@ -13,6 +13,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.AsymmetricKey;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 import javax.crypto.SecretKey;
 
 import com.ejetool.common.crypto.rsa.RSAKeyGenerator;
@@ -29,7 +30,13 @@ public class JwtKeyStoreGenerator{
     @Getter
     private final Map<JwtKeyType, String> typeMap;
 
-    public JwtKeyStoreGenerator(){
+    public static JwtKeyStoreGenerator build(Consumer<JwtKeyStoreGeneratorOptions> options){
+        var jwtKeyStoreGeneratorOptions = new JwtKeyStoreGeneratorOptions();
+        options.accept(jwtKeyStoreGeneratorOptions);
+        return new JwtKeyStoreGenerator(jwtKeyStoreGeneratorOptions);
+    }
+
+    public JwtKeyStoreGenerator(JwtKeyStoreGeneratorOptions options){
         this.store = new HashMap<>();
         this.typeMap = new EnumMap<>(JwtKeyType.class);
     }

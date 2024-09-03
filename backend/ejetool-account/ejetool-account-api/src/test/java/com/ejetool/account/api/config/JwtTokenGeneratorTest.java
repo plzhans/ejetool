@@ -6,12 +6,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import com.ejetool.account.service.config.JwtConfig;
 import com.ejetool.common.io.support.YamlPropertySourceFactory;
 import com.ejetool.jwt.generator.JwtGenerator;
 import com.ejetool.jwt.generator.JwtKeyType;
@@ -22,37 +25,52 @@ import com.ejetool.jwt.generator.RSAJwtGenerator;
 import com.ejetool.jwt.generator.RSAJwtValidator;
 
 import io.jsonwebtoken.Claims;
+import lombok.Getter;
+import lombok.Setter;
 
 @SpringJUnitConfig(classes = {JwtTokenGeneratorTest.Config.class})
 @TestPropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 class JwtTokenGeneratorTest {
 
     @TestConfiguration
+    @EnableConfigurationProperties(AuthSecuritySettings.class)
     static class Config{
+        
+    }
+
+    @Getter @Setter
+    @ConfigurationProperties("auth.security")
+    static class AuthSecuritySettings{
+
+        @Value("${auth.security.issuer}")
+        private String issuer;
+
+        private String[] allowedIssuers;
+
         @Value("${auth.security.secret}")
-        private String authSecuritySecret;
+        private String secret;
 
         @Value("${auth.security.private_key_path}")
-        private String authSecurityPrivateKeyPath;
+        private String privateKeyPath;
 
         @Value("${auth.security.public_key_path}")
-        private String authSecurityPublicKeyPath;
+        private String publicKeyPath;
     }
 
     @Autowired
-    private Config config;
+    private AuthSecuritySettings settings;
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     @Test
     void rsa_generator_and_verify() throws IOException {
-        String issuer = "https://projects.ejetool.com";
+        String issuer = this.settings.getIssuer();
         String sub = "1";
         String name = "ejegong-ai";
         String[] roles = new String[]{"admin"};
 
-        Resource resourcePrivate = resourceLoader.getResource(this.config.authSecurityPrivateKeyPath);
+        Resource resourcePrivate = resourceLoader.getResource(this.settings.getPrivateKeyPath());
         JwtGenerator generator = RSAJwtGenerator.create(
             resourcePrivate.getFile().toPath()
         );
@@ -61,7 +79,7 @@ class JwtTokenGeneratorTest {
             resourcePrivate.getFile().toPath()
         );
         
-        Resource resourcePublic = resourceLoader.getResource(this.config.authSecurityPublicKeyPath);
+        Resource resourcePublic = resourceLoader.getResource(this.settings.getPublicKeyPath());
         JwtValidator publicKeyValidator = RSAJwtValidator.create(
             resourcePublic.getFile().toPath()
         );
@@ -93,20 +111,20 @@ class JwtTokenGeneratorTest {
 
     @Test
     void keyStore_generator_and_verify() throws IOException {
-        String issuer = "https://projects.ejetool.com";
+        String issuer = this.settings.getIssuer();
         String sub = "1";
         String name = "ejegong-ai";
         String[] roles = new String[]{"admin"};
 
-        Resource resourcePrivate = resourceLoader.getResource(this.config.authSecurityPrivateKeyPath);
-        JwtKeyStoreGenerator generator = new JwtKeyStoreGenerator();
+        Resource resourcePrivate = resourceLoader.getResource(this.settings.getPrivateKeyPath());
+        JwtKeyStoreGenerator generator = JwtKeyStoreGenerator.build(o->o.setIssuer(issuer));
         generator.addPrivateKeyPath(resourcePrivate.getFile().toPath());
-        generator.addSecretKey(this.config.authSecuritySecret, "s");
+        generator.addSecretKey(this.settings.getSecret(), "s");
         
-        Resource resourcePublic = resourceLoader.getResource(this.config.authSecurityPublicKeyPath);
-        JwtKeyStoreValidator validator = new JwtKeyStoreValidator();
+        Resource resourcePublic = resourceLoader.getResource(this.settings.getPublicKeyPath());
+        JwtKeyStoreValidator validator = JwtKeyStoreValidator.build(o->o.addIssuer(this.settings.getAllowedIssuers()));
         validator.addPublicKeyPath(resourcePublic.getFile().getPath());
-        validator.addSecretKey(this.config.authSecuritySecret, "s");
+        validator.addSecretKey(this.settings.getSecret(), "s");
 
         String token = generator.builder(JwtKeyType.SYMMETRIC, sub)
             .setIssuer(issuer)
