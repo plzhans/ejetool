@@ -171,9 +171,9 @@ jobs:
           password: ${{secrets.GHCR_READ_TOKEN}}
       - name: Env Init
         run: |
-          echo "DOCKER_NETWORK=ejetool_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_NETWORK=${{env.ENVIRONMENT}}-ejetool" >> $GITHUB_ENV
           echo "DOCKER_IMAGE=${{github.repository}}/ejetool-videoai-api:${{env.ENVIRONMENT}}" >> $GITHUB_ENV
-          echo "DOCKER_CONTAINER_NAME=ejetool-videoai-api_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=${{env.ENVIRONMENT}}-ejetool-videoai-api" >> $GITHUB_ENV
       - name: Docker Image Remove
         run: |
           docker stop ${DOCKER_CONTAINER_NAME} || true
@@ -225,9 +225,9 @@ jobs:
           password: ${{secrets.GHCR_READ_TOKEN}}
       - name: Env Init
         run: |
-          echo "DOCKER_NETWORK=ejetool_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_NETWORK=${{env.ENVIRONMENT}}-ejetool" >> $GITHUB_ENV
           echo "DOCKER_IMAGE=${{github.repository}}/ejetool-videoai-chatbot:${{env.ENVIRONMENT}}" >> $GITHUB_ENV
-          echo "DOCKER_CONTAINER_NAME=ejetool-videoai-chatbot_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=${{env.ENVIRONMENT}}-ejetool-videoai-chatbot" >> $GITHUB_ENV
       - name: Docker Image Remove
         run: |
           docker stop ${DOCKER_CONTAINER_NAME} || true

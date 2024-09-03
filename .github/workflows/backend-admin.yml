@@ -133,9 +133,9 @@ jobs:
           password: ${{secrets.GHCR_READ_TOKEN}}
       - name: Env Init
         run: |
-          echo "DOCKER_NETWORK=ejetool_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_NETWORK=${{env.ENVIRONMENT}}-ejetool" >> $GITHUB_ENV
           echo "DOCKER_IMAGE=${{github.repository}}/ejetool-admin-spring:${{env.ENVIRONMENT}}" >> $GITHUB_ENV
-          echo "DOCKER_CONTAINER_NAME=ejetool-admin-spring_${{env.ENVIRONMENT}}" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=${{env.ENVIRONMENT}}-ejetool-admin-spring" >> $GITHUB_ENV
       - name: Docker Image Remove
         run: |
           docker stop ${DOCKER_CONTAINER_NAME} || true
