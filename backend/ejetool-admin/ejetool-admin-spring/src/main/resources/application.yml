@@ -2,7 +2,10 @@
 # server
 ##################################################
 server:
+  servlet:
+    context-path: /sbm
   port: 9000
+  
 
 ##################################################
 # spring
@@ -23,7 +26,7 @@ spring:
           logfile: 30000 
       client:
         instance:
-          #service-url: http://localhost:9000
+          #service-url: http://localhost:9000/sbm
           metadata:
             user:
               name: xadmin
@@ -31,7 +34,7 @@ spring:
         username: xadmin
         password: xadmin
         url: 
-          - http://localhost:9000
+          - http://localhost:9000/sbm
   cloud:
     gateway:
       routes:

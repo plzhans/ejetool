@@ -39,7 +39,7 @@ spring:
   #   admin:
   #     client:
   #       url:
-  #         - http://127.0.0.1:9000
+  #         - http://127.0.0.1:9000/sbm
   jpa:
     hibernate:
       # values: none, create, create-drop, update, validate
