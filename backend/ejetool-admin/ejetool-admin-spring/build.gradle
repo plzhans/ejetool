@@ -9,6 +9,9 @@ dependencies {
 	implementation 'de.codecentric:spring-boot-admin-client:3.2.3'
 	implementation 'de.codecentric:spring-boot-admin-starter-server:3.2.3'
     // implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.14.0'
+	implementation 'io.sentry:sentry-logback:7.14.0'
 } 
 
 bootJar {

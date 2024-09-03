@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 	"com.ejetool.videoai"
 })
 @EnableAspectJAutoProxy
+//@EnableSentry(dsn = "https://17d8fca0b122e64a717ae10e407ccaba@o4507886343159808.ingest.de.sentry.io/4507886347878480")
 public class EjetoolVideoaiApiApplication {
 
 	public static void main(String[] args) {
