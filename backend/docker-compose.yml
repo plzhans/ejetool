@@ -56,7 +56,9 @@ services:
     volumes:
       - ./data-docker/main-cache/data:/data
   main-gateway:
-    image: nginx:alpine
+    build:
+      context: ./infra/nginx
+      dockerfile: Dockerfile
     container_name: main-gateway
     hostname: main-gateway
     ports:
