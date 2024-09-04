@@ -1,9 +1,9 @@
 ##################################################
-# chatbot
+# server
 ##################################################
 server:
   servlet:
-    context-path: /chatbot
+    context-path: /videoai-chatbot
   port: 0
 
 ##################################################
@@ -19,29 +19,6 @@ spring:
   #     client:
   #       url:
   #         - http://127.0.0.1:9000/sbm
-
-##################################################
-# management : Actuator
-##################################################
-management:
-  server:
-    port: 9090
-  endpoints:
-    #enabled-by-default: false
-    jmx:
-      exposure:
-        #exclude: '*'
-        include: '*'
-    web:
-      base-path: /mmm
-      exposure:
-        # include: info, health
-        include: '*'
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
 
 ##################################################
 # ejetool
@@ -69,6 +46,29 @@ logging:
       ejetool: info
   file:
     name: ./logs/${spring.application.name}/std.log
+
+##################################################
+# management : Actuator
+##################################################
+management:
+  server:
+    port: 9090
+  endpoints:
+    #enabled-by-default: false
+    jmx:
+      exposure:
+        #exclude: '*'
+        include: '*'
+    web:
+      base-path: /mmm
+      exposure:
+        # include: info, health
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
 
 ##################################################
 # sentry
