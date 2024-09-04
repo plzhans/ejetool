@@ -33,6 +33,8 @@ public class ContentApiImpl implements ContentApi {
     
     @SuppressWarnings("squid:S1075")
     public static class Const {
+        public static final String PATH_BASE = "/videoai";
+
         public static final String PATH_CONTENTS_CREATE_AI = "/contents/ai";
         public static final String PATH_CONTENTS_GET = "/contents/{content_id}";
         public static final String PATH_CONTENTS_UPDATE_ITEM = "/contents/{content_id}/{item_id}";
@@ -68,7 +70,7 @@ public class ContentApiImpl implements ContentApi {
      * @return
      */
     public String toEndpoint(String path){
-        return this.settings.getHost() + path;
+        return this.settings.getHost() + Const.PATH_BASE + path;
     }
     
      /**
@@ -78,7 +80,7 @@ public class ContentApiImpl implements ContentApi {
      */
     public UriComponentsBuilder toEndpointAsBuilder(String path){
         return UriComponentsBuilder.fromUriString(this.settings.getHost())
-                    .path(path);
+                    .path(Const.PATH_BASE + path);
     }
 
     /*
