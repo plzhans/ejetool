@@ -35,6 +35,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .ignoringRequestMatchers(
+                    new AntPathRequestMatcher(this.adminServer.path("/logout")),
                     new AntPathRequestMatcher(this.adminServer.path("/instances"), "POST"),
                     new AntPathRequestMatcher(this.adminServer.path("/instances/*"), "DELETE"),
                     new AntPathRequestMatcher(this.adminServer.path("/actuator")),
@@ -49,7 +50,6 @@ public class SecurityConfig {
             //  })
             .authorizeHttpRequests(
                 registry->registry
-                    //.requestMatchers(this.adminServer.path("/actuator"), this.adminServer.path("/actuator/**")).permitAll()
                     .requestMatchers(this.adminServer.path("/assets/**")).permitAll()
                     .requestMatchers(this.adminServer.path("/login")).permitAll()
                     .anyRequest().authenticated()
