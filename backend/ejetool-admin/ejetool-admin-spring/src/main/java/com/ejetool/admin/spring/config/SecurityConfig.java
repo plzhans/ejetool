@@ -36,8 +36,8 @@ public class SecurityConfig {
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .ignoringRequestMatchers(
                     new AntPathRequestMatcher(this.adminServer.path("/logout")),
-                    new AntPathRequestMatcher(this.adminServer.path("/instances"), "POST"),
-                    new AntPathRequestMatcher(this.adminServer.path("/instances/*"), "DELETE"),
+                    new AntPathRequestMatcher(this.adminServer.path("/instances")),
+                    new AntPathRequestMatcher(this.adminServer.path("/instances/**")),
                     new AntPathRequestMatcher(this.adminServer.path("/actuator")),
                     new AntPathRequestMatcher(this.adminServer.path("/actuator/**"))
                 )
