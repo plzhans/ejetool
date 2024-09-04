@@ -9,6 +9,10 @@ dependencies {
 	api project(":ejetool-videoai-domain") 
 	api project(":ejetool-videoai-event-publisher")
 
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation "de.codecentric:spring-boot-admin-client:3.3.3"
+
 	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.14.0'
 	implementation 'io.sentry:sentry-logback:7.14.0'
 } 

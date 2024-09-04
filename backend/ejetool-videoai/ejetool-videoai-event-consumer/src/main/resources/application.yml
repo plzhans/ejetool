@@ -1,4 +1,12 @@
 ##################################################
+# server
+##################################################
+server:
+  servlet:
+    context-path: /videoai-event-consumer
+  port: 0
+
+##################################################
 # spring
 ##################################################
 spring:
@@ -94,6 +102,28 @@ logging:
   file:
     name: ./logs/${spring.application.name}/std.log
 
+##################################################
+# management : Actuator
+##################################################
+management:
+  server:
+    port: 9090
+  endpoints:
+    #enabled-by-default: false
+    jmx:
+      exposure:
+        #exclude: '*'
+        include: '*'
+    web:
+      base-path: /mmm
+      exposure:
+        # include: info, health
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
 
 ##################################################
 # sentry
