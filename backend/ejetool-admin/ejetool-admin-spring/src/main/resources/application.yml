@@ -19,14 +19,13 @@ spring:
       password: xadmin
   boot:
     admin:
-      # context-path: /admin
       ui:
-        #public-url: https://custom.domain.com/admin
+        #public-url: http://127.0.0.1:9001
         poll-timer:
           logfile: 30000 
       client:
         instance:
-          #service-url: http://localhost:9000/sbm
+          #service-url: http://127.0.0.1:9001/sbm
           metadata:
             user:
               name: xadmin

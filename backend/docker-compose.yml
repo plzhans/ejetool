@@ -55,6 +55,7 @@ services:
       REDIS_PASS_FILE: /run/secrets/MAIN__CACHE__PASSWORD
     volumes:
       - ./data-docker/main-cache/data:/data
+
   main-gateway:
     build:
       context: ./infra/nginx
@@ -62,9 +63,10 @@ services:
     container_name: main-gateway
     hostname: main-gateway
     ports:
-      - "8080:8080"
+      - "8080:80"
+      - "9001:9000"
     volumes:
-      - ./logs/main-gateway:/var/log/nginx
+      #- ./logs/main-gateway/nginx:/var/log/nginx
       - ./ejetool-infra/ejetool-nginx-api/conf.d:/etc/nginx/conf.d
 
     
