@@ -22,6 +22,7 @@ import com.ejetool.account.service.dto.project.CreateProjectApiKeyParam;
 
 @SpringJUnitConfig(ProjectServiceTest.Config.class)
 @TestPropertySource(locations = "file:../ejetool-account-api/src/main/resources/application.yml", factory = YamlPropertySourceFactory.class)
+//@TestPropertySource(locations = "file:../ejetool-account-api/src/main/resources/application-local.yml", factory = YamlPropertySourceFactory.class)
 @ContextConfiguration
 class ProjectServiceTest {
     @TestConfiguration
@@ -59,7 +60,7 @@ class ProjectServiceTest {
             .build();
 
         var result = service.createApiKey(param);
-
+        //System.out.println("ApiKey : " + result.getApiKey());
         assertFalse(result.getApiKey().isEmpty());
     }
 }

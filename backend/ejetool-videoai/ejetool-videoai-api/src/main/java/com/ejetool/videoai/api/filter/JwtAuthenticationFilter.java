@@ -20,16 +20,19 @@ import com.ejetool.jwt.generator.JwtKeyStoreValidator;
 import com.ejetool.videoai.api.dto.auth.AuthUser;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Order(0)
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtKeyStoreValidator jwtKeyStoreValidator;
@@ -38,10 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = parseToken(request);
         if(StringUtils.hasText(token)){
-            AuthUser user = this.verifyUser(token);
-            AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user, token, user.getAuthorities());
-            authenticated.setDetails(new WebAuthenticationDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticated);
+            this.verifyUser(token).ifPresent(user->{
+                AbstractAuthenticationToken authenticated = UsernamePasswordAuthenticationToken.authenticated(user, token, user.getAuthorities());
+                authenticated.setDetails(new WebAuthenticationDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticated);
+            });
         }
         filterChain.doFilter(request, response);
     }
@@ -54,10 +58,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .orElse(null);
     }
 
-    public AuthUser verifyUser(String token){
-        Claims claims = this.jwtKeyStoreValidator.verify(token);
-        AuthUser user = this.getAuthUser(claims);
-        return user;
+    public Optional<AuthUser> verifyUser(String token){
+        try{
+            Claims claims = this.jwtKeyStoreValidator.verify(token);
+            AuthUser user = this.getAuthUser(claims);
+            return Optional.of(user);
+        } catch(SignatureException e){
+            log.debug("jwtKeyStoreValidator.verify():fail. token={}", token);
+        }
+        return Optional.empty();
     }
 
     public AuthUser getAuthUser(Claims claims){
