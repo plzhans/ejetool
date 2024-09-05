@@ -1,0 +1,10 @@
+##################################################
+# Logger
+##################################################
+logging:
+  level:
+    root: info
+    com:
+      ejetool: info
+  file:
+    name: ./logs/${spring.application.name}/std.log

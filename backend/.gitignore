@@ -53,10 +53,10 @@ builds
 secrets.fake
 
 # config
-**/src/main/resources/application-*.yml
-**/src/main/resources/application-*.properties
-**/src/test/resources/application-*.yml
-**/src/test/resources/application-*.properties
+**/src/main/resources/application-local*.yml
+**/src/main/resources/application-local*.properties
+**/src/test/resources/application-local*.yml
+**/src/test/resources/application-local*.properties
 
 # docker data
 data-docker

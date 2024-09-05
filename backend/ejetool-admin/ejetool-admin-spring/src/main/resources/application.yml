@@ -5,7 +5,6 @@ server:
   servlet:
     context-path: /sbm
   port: 9000
-  
 
 ##################################################
 # spring
@@ -13,6 +12,12 @@ server:
 spring:
   application:
     name: ejetool-admin-spring
+  config:
+    import:
+      - classpath:eureka.yml
+      - classpath:logger.yml
+      - classpath:management.yml
+      - classpath:sentry.yml
   security:
     user:
       name: xadmin
@@ -46,54 +51,3 @@ spring:
   #         uri: http://localhost:8085/
   #         predicates:
   #           - Path=/videoai/**
-
-##################################################
-# eureka
-##################################################
-# eureka:
-#   client:
-#     register-with-eureka: false
-#     fetch-registry: false
-#     service-url:
-#       defaultZone: http://localhost:8761/eureka
-
-
-##################################################
-# management
-##################################################
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    gateway:
-      enabled: true
-  security:
-    enabled: true
-
-##################################################
-# Logger
-##################################################
-logging:
-  level:
-    root: info
-    com:
-      ejetool: info
-  file:
-    name: ./logs/${spring.application.name}/std.log
-
-##################################################
-# sentry
-##################################################
-sentry:
-  dsn:
-  environment: ${spring.environment:production}
-  traces-sample-rate: 1.0
-  exception-resolver-order: -2147483647
-  max-request-body-size: small
-  send-default-pii: true
-  logging:
-    minimum-event-level: ERROR
-    minimum-breadcrumb-level: DEBUG
-    enabled: true

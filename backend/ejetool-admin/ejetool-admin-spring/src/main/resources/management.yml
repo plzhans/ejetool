@@ -1,0 +1,13 @@
+##################################################
+# management
+##################################################
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  security:
+    enabled: true

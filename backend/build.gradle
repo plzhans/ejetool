@@ -69,9 +69,10 @@ subprojects {
 	sourceSets {
 		main {
 			resources {
+				exclude '**/application-local*.properties'
+				exclude '**/application-local*.yml'
 				if (project.hasProperty('release')) {
-					exclude '**/application-*.properties'
-					exclude '**/application-*.yml'
+					
 				}
 			}
 		}
