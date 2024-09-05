@@ -34,19 +34,18 @@ spring:
               password: xadmin
         username: xadmin
         password: xadmin
-        url: 
-          - http://localhost:9000/sbm
-  cloud:
-    gateway:
-      routes:
-        - id: auth
-          uri: http://localhost:8081/
-          predicates:
-            - Path=/auth/**
-        - id: second-service
-          uri: http://localhost:8085/
-          predicates:
-            - Path=/videoai/**
+        url: http://localhost:9000/sbm
+  # cloud:
+  #   gateway:
+  #     routes:
+  #       - id: auth
+  #         uri: http://localhost:8081/
+  #         predicates:
+  #           - Path=/auth/**
+  #       - id: second-service
+  #         uri: http://localhost:8085/
+  #         predicates:
+  #           - Path=/videoai/**
 
 ##################################################
 # eureka
