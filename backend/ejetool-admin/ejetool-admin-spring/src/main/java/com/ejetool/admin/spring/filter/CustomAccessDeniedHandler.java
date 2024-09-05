@@ -19,6 +19,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) 
         throws IOException, ServletException 
     {
+        if(log.isDebugEnabled()){
+            log.debug("{}{}: AccessDeniedException. Message: {}.", request.getContextPath(), request.getServletPath(), accessDeniedException.getMessage());
+            log.debug("{}{}: AccessDeniedException. Cause: {}.", request.getContextPath(), request.getServletPath(), accessDeniedException.getCause());
+        }
         log.info("{}{}: Forbidden. remote={}", request.getContextPath(), request.getServletPath(), request.getRemoteAddr());
     }
 

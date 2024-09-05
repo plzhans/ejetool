@@ -43,7 +43,7 @@ import lombok.experimental.UtilityClass;
 /**
  * 컨텐츠 컨트롤러
  */
-@Secured(ContentRole.IMAGE)
+@Secured(ContentRole.VIDEOAI)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contents")
@@ -66,7 +66,6 @@ public class ContentsController {
         public static final String PATH_AGREE_ITEM_IMAGE = "/{content_id}/agree-item-image";
         public static final String PATH_AGREE_ITEM_VOICE = "/{content_id}/agree-item-voice";
         public static final String PATH_PUBLISH_VIDEO = "/{content_id}/publish-video";
-        
     }
 
     private final ContentService service;
