@@ -30,15 +30,15 @@ public class SecurityConfig {
         loginSuccessHandler.setDefaultTargetUrl(this.adminServer.path("/"));
         
         http
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringRequestMatchers(
-                    new AntPathRequestMatcher(this.adminServer.path("/logout")),
-                    new AntPathRequestMatcher(this.adminServer.path("/instances")),
-                    new AntPathRequestMatcher(this.adminServer.path("/instances/**")),
-                    new AntPathRequestMatcher(this.adminServer.path("/actuator")),
-                    new AntPathRequestMatcher(this.adminServer.path("/actuator/**"))
-                )
+            .csrf(csrf -> csrf.disable()
+                // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                // .ignoringRequestMatchers(
+                //     new AntPathRequestMatcher(this.adminServer.path("/logout")),
+                //     new AntPathRequestMatcher(this.adminServer.path("/instances")),
+                //     new AntPathRequestMatcher(this.adminServer.path("/instances/**")),
+                //     new AntPathRequestMatcher(this.adminServer.path("/actuator")),
+                //     new AntPathRequestMatcher(this.adminServer.path("/actuator/**"))
+                // )
             )
             //.sessionManagement(x->x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             //.exceptionHandling(e -> {
@@ -50,7 +50,8 @@ public class SecurityConfig {
                 registry->registry
                     .requestMatchers(this.adminServer.path("/assets/**")).permitAll()
                     .requestMatchers(this.adminServer.path("/login")).permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
+                    //.anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage(this.adminServer.path("/login"))
