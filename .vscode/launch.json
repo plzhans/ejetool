@@ -8,7 +8,7 @@
             "mainClass": "com.ejetool.videoai.api.EjetoolVideoaiApiApplication",
             "projectName": "ejetool-videoai-api",
             "args": "",
-            "envFile": "${workspaceFolder}/backend/.env",
+            "envFile": "${workspaceFolder}/backend/debug.env",
         },
         {
             "type": "java",
@@ -18,7 +18,7 @@
             "mainClass": "com.ejetool.videoai.chatbot.EjetoolVideoaiChatbotApplication",
             "projectName": "ejetool-videoai-chatbot",
             "args": "",
-            "envFile": "${workspaceFolder}/backend/.env"
+            "envFile": "${workspaceFolder}/backend/debug.env"
         },
         {
             "type": "java",
@@ -28,7 +28,7 @@
             "mainClass": "com.ejetool.videoai.event.consumer.EjetoolVideoaiEventConsumerApplication",
             "projectName": "ejetool-videoai-event-consumer",
             "args": "",
-            "envFile": "${workspaceFolder}/backend/.env"
+            "envFile": "${workspaceFolder}/backend/debug.env"
         },
         {
             "type": "java",
@@ -38,7 +38,7 @@
             "mainClass": "com.ejetool.admin.spring.EjetoolAdminSpringApplication",
             "projectName": "ejetool-admin-spring",
             "args": "",
-            "envFile": "${workspaceFolder}/backend/.env"
+            "envFile": "${workspaceFolder}/backend/debug.env"
         },
         {
             "type": "java",
@@ -48,7 +48,7 @@
             "mainClass": "com.ejetool.gateway.api.EjetoolGatewayApiApplication",
             "projectName": "ejetool-gateway-api",
             "args": "",
-            "envFile": "${workspaceFolder}/backend/.env"
+            "envFile": "${workspaceFolder}/backend/debug.env"
         }
     ]
 }
