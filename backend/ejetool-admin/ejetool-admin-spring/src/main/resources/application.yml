@@ -20,11 +20,13 @@ spring:
   boot:
     admin:
       ui:
+        remember-me-enabled: false
         #public-url: http://127.0.0.1:9001
         poll-timer:
           logfile: 30000 
       client:
         instance:
+          #service-host-type: CANONICAL_HOST_NAME
           #service-url: http://127.0.0.1:9001/sbm
           metadata:
             user:

@@ -16,8 +16,6 @@ import org.springframework.web.filter.CorsFilter;
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import lombok.RequiredArgsConstructor;
 
-import java.util.UUID;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableMethodSecurity
@@ -59,10 +57,6 @@ public class SecurityConfig {
                 .successHandler(loginSuccessHandler)
             )
             .httpBasic(Customizer.withDefaults())
-            .rememberMe(rememberMe -> rememberMe
-                .key(UUID.randomUUID().toString())
-                .tokenValiditySeconds(1209600)
-            )
             .logout(logout -> logout.permitAll());
         return http.build();
     }
