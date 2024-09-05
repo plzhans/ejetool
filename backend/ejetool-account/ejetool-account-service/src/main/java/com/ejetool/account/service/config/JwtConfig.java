@@ -12,13 +12,16 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ejetool.common.util.StringMakerUtils;
 import com.ejetool.jwt.generator.JwtKeyStoreGenerator;
 import com.ejetool.jwt.generator.JwtKeyStoreValidator;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(JwtConfig.AuthSecuritySettings.class)
@@ -45,6 +48,11 @@ public class JwtConfig {
 
     @Bean
     JwtKeyStoreGenerator jwtKeyStoreGenerator(ResourceLoader resourceLoader) throws IOException{
+        log.info("settings.issuer={}", settings.getIssuer());
+        log.info("settings.allowedIssuers={}", String.join(",", settings.getAllowedIssuers()));
+        log.info("settings.privateKeyPath={}", settings.getPrivateKeyPath());
+        log.info("settings.secret={}", StringMakerUtils.mask(settings.getSecret()));
+
         Resource resourcePrivate = resourceLoader.getResource(this.settings.getPrivateKeyPath());
         JwtKeyStoreGenerator generator = JwtKeyStoreGenerator.build(o->{
             o.setIssuer(this.settings.getIssuer());

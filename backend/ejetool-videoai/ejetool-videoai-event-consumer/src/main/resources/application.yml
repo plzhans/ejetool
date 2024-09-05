@@ -67,6 +67,7 @@ useapi:
 # Google
 ##################################################
 google: 
+  application_name: ejegong-creator-ai
   # Link: https://cloud.google.com/iam/docs/service-account-overview?hl=ko
   service_account: |
     {

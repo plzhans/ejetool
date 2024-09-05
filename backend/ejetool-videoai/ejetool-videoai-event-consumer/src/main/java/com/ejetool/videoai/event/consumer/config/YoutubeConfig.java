@@ -4,11 +4,15 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.ejetool.common.util.StringMakerUtils;
 import com.ejetool.lib.youtube.service.YoutubeService;
 import com.ejetool.lib.youtube.service.YoutubeServiceMakeProxyImpl;
 import com.ejetool.lib.youtube.setting.MakeYoutubeWebhookSettings;
 import com.ejetool.videoai.event.consumer.setting.GoogleDriveSettings;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableConfigurationProperties({
     GoogleDriveSettings.class,
@@ -40,6 +44,8 @@ public class YoutubeConfig {
 
     @Bean
     YoutubeService youtubeService(MakeYoutubeWebhookSettings settings){
+        log.info("settings.apiKey={}", StringMakerUtils.mask(settings.getApiKey()));
+        log.info("settings.webhook={}", settings.getWebhook());
         return new YoutubeServiceMakeProxyImpl(settings);
     }
 }

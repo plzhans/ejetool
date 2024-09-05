@@ -1,7 +1,6 @@
 package com.ejetool.videoai.event.consumer.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,9 +8,6 @@ import org.springframework.data.redis.connection.stream.Consumer;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.util.StringUtils;
-
-import com.ejetool.mq.redis.stream.RedisStreamReceiver;
-import com.ejetool.videoai.event.publisher.publisher.VideoAIEventPublisher;
 
 import lombok.RequiredArgsConstructor;
 

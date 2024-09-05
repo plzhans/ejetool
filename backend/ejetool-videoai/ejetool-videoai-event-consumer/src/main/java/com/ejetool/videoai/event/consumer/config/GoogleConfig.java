@@ -24,8 +24,12 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.texttospeech.v1.TextToSpeechClient;
 import com.google.cloud.texttospeech.v1.TextToSpeechSettings;
+
+import lombok.extern.slf4j.Slf4j;
+
 import com.google.api.client.json.JsonFactory;
 
+@Slf4j
 @Configuration
 @EnableConfigurationProperties(GoogleDriveSettings.class)
 public class GoogleConfig {
@@ -33,12 +37,21 @@ public class GoogleConfig {
     @Bean
     GoogleCredentials credentials(@Value("${google.service_account}") String serviceAccountJson) throws IOException {
         InputStream inputStream = new ByteArrayInputStream(serviceAccountJson.getBytes());
-        GoogleCredentials credentials = ServiceAccountCredentials.fromStream(inputStream)
-                .createScoped(Arrays.asList(
-                    "https://www.googleapis.com/auth/cloud-platform",
-                    DriveScopes.DRIVE_FILE,
-                    YouTubeScopes.YOUTUBE_UPLOAD
-                ));
+        ServiceAccountCredentials serviceAccountCredentials = ServiceAccountCredentials.fromStream(inputStream);
+     
+        log.info("settings.service_account.authenticationType={}", serviceAccountCredentials.getAuthenticationType());
+        log.info("settings.service_account.projectId={}", serviceAccountCredentials.getProjectId());
+        log.info("settings.service_account.quotaProjectId={}", serviceAccountCredentials.getQuotaProjectId());
+        log.info("settings.service_account.privateKeyId={}", serviceAccountCredentials.getPrivateKeyId());
+        log.info("settings.service_account.clientEmail={}", serviceAccountCredentials.getClientEmail());
+        log.info("settings.service_account.clientId={}", serviceAccountCredentials.getClientId());
+
+        GoogleCredentials credentials = serviceAccountCredentials
+        .createScoped(Arrays.asList(
+            "https://www.googleapis.com/auth/cloud-platform",
+            DriveScopes.DRIVE_FILE,
+            YouTubeScopes.YOUTUBE_UPLOAD
+        ));
         return credentials;
     }
 
@@ -52,13 +65,15 @@ public class GoogleConfig {
     }
 
     @Bean
-    Drive googleDrive(GoogleCredentials googleCredentials) throws GeneralSecurityException, IOException{
+    Drive googleDrive(GoogleCredentials googleCredentials, @Value("${google.application_name}") String applicationName) throws GeneralSecurityException, IOException{
+        log.info("settings.application_name={}", applicationName);
+
         final NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
         final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
         HttpCredentialsAdapter httpCredentialsAdapter = new HttpCredentialsAdapter(googleCredentials);
         Drive drive = new Drive.Builder(transport, jsonFactory, httpCredentialsAdapter)
-            .setApplicationName("ejegong-creator-ai")
+            .setApplicationName(applicationName)
             .build();
             
         return drive;

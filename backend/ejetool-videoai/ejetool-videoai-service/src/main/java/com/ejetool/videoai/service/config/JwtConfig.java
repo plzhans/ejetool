@@ -11,6 +11,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ejetool.common.util.StringMakerUtils;
 import com.ejetool.jwt.generator.JwtKeyStoreValidator;
 
 import lombok.Getter;
@@ -41,6 +42,10 @@ public class JwtConfig {
 
     @Bean
     JwtKeyStoreValidator jwtKeyStoreValidator(ResourceLoader resourceLoader) throws IOException{
+        log.info("settings.allowedIssuers={}", String.join(",", settings.getAllowedIssuers()));
+        log.info("settings.publicKeyPath={}", settings.getPublicKeyPath());
+        log.info("settings.secret={}", StringMakerUtils.mask(settings.getSecret()));
+
         var resourcePublic = resourceLoader.getResource(this.settings.getPublicKeyPath());
         var publicKeyFile = resourcePublic.getFile();
 
