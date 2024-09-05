@@ -43,7 +43,7 @@ import lombok.experimental.UtilityClass;
 /**
  * 컨텐츠 컨트롤러
  */
-@Secured(ContentRole.VIDEOAI)
+//@Secured(ContentRole.VIDEOAI)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contents")
