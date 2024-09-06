@@ -1,40 +1,18 @@
 ##################################################
-# server
-##################################################
-server:
-  servlet:
-    context-path: /videoai
-  port: 8080
-
-##################################################
-# management : Actuator
-##################################################
-management:
-  server:
-    port: 9090
-  endpoints:
-    #enabled-by-default: false
-    # jmx:
-    #   exposure:
-    #     exclude: '*'
-    web:
-      base-path: /videoai/mmm
-      exposure:
-        # include: info, health
-        include: '*'
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
-
-##################################################
 # spring
 ##################################################
 spring:
   environment: production
   application:
     name: ejetool-videoai-api
+  config:
+    import:
+      - classpath:server.yml
+      - classpath:eureka.yml
+      - classpath:logger.yml
+      - classpath:management.yml
+      - classpath:sentry.yml
+      - classpath:openapi.yml
   # boot:
   #   admin:
   #     client:
@@ -52,14 +30,14 @@ spring:
   
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ejetool-videoai?useUnicode=true&autoReconnect=true
+    url: jdbc:mysql://localhost:23306/ejetool-videoai?useUnicode=true&autoReconnect=true
     username: 
     password: 
   
   data:
     redis:
       host: localhost
-      port: 21102
+      port: 26379
 
   jackson:
       property-naming-strategy: SNAKE_CASE
@@ -118,54 +96,3 @@ google:
       "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/service_account%40service_account.iam.gserviceaccount.com",
       "universe_domain": "googleapis.com"
     }
-
-##################################################
-# doc
-#################################################
-springdoc:
-  default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
-  show-actuator: true
-  writer-with-default-pretty-printer: true
-  model-and-view-allowed: true
-  # use-fqn: true
-  paths-to-match:
-    - /contents/**
-  api-servers: http://127.0.0.1:8080/videoai
-  api-docs:
-    path: /docs/openapi/${spring.application.name}.json
-  swagger-ui:
-    path: /docs/
-    disable-swagger-default-url: true
-    display-request-duration: true
-    operations-sorter: alpha
-    urls:
-      - url: /docs/openapi/${spring.application.name}.json
-        name: VideoAI
-  
-##################################################
-# Logger
-##################################################
-logging:
-  level:
-    root: info
-    com:
-      ejetool: info
-  file:
-    name: ./logs/${spring.application.name}/std.log
-
-##################################################
-# sentry
-##################################################
-sentry:
-  dsn:
-  environment: ${spring.environment:production}
-  traces-sample-rate: 1.0
-  exception-resolver-order: -2147483647
-  # max-request-body-size, send-default-pii 같이 있으면 오류가 발생한다
-  # max-request-body-size: always
-  send-default-pii: true
-  logging:
-    minimum-event-level: ERROR
-    minimum-breadcrumb-level: DEBUG
-    enabled: true

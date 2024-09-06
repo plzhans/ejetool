@@ -1,0 +1,21 @@
+##################################################
+# management : Actuator
+##################################################
+management:
+  server:
+    port: 9090
+  endpoints:
+    #enabled-by-default: false
+    # jmx:
+    #   exposure:
+    #     exclude: '*'
+    web:
+      base-path: /videoai/mmm
+      exposure:
+        # include: info, health
+        include: '*'
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true

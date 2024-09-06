@@ -1,12 +1,4 @@
 ##################################################
-# server
-##################################################
-server:
-  servlet:
-    context-path: /sbm
-  port: 9000
-
-##################################################
 # spring
 ##################################################
 spring:
@@ -14,6 +6,7 @@ spring:
     name: ejetool-admin-spring
   config:
     import:
+      - classpath:server.yml
       - classpath:eureka.yml
       - classpath:logger.yml
       - classpath:management.yml

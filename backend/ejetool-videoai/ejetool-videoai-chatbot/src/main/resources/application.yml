@@ -1,17 +1,16 @@
 ##################################################
-# server
-##################################################
-server:
-  servlet:
-    context-path: /videoai-chatbot
-  port: 0
-
-##################################################
 # spring 
 ##################################################
 spring:
   application:
     name: ejetool-videoai-chatbot
+  config:
+    import:
+      - classpath:server.yml
+      - classpath:eureka.yml
+      - classpath:logger.yml
+      - classpath:management.yml
+      - classpath:sentry.yml
   jmx:
     enabled: true
   # boot:
@@ -35,53 +34,3 @@ telegram:
     token: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq
     default_chat_id: 1234
     admin_ids: 1234
-
-##################################################
-# Logger
-##################################################
-logging:
-  level:
-    root: info
-    com:
-      ejetool: info
-  file:
-    name: ./logs/${spring.application.name}/std.log
-
-##################################################
-# management : Actuator
-##################################################
-management:
-  server:
-    port: 9090
-  endpoints:
-    #enabled-by-default: false
-    jmx:
-      exposure:
-        #exclude: '*'
-        include: '*'
-    web:
-      base-path: /mmm
-      exposure:
-        # include: info, health
-        include: '*'
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
-
-##################################################
-# sentry
-##################################################
-sentry:
-  dsn:
-  environment: ${spring.environment:production}
-  traces-sample-rate: 1.0
-  exception-resolver-order: -2147483647
-  # max-request-body-size, send-default-pii 같이 있으면 오류가 발생한다
-  # max-request-body-size: always
-  send-default-pii: true
-  logging:
-    minimum-event-level: ERROR
-    minimum-breadcrumb-level: DEBUG
-    enabled: true
