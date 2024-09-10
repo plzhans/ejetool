@@ -7,6 +7,12 @@ management:
       exposure:
         include: "*"
   endpoint:
+    env:
+      #roles: MONITORING
+      show-values: WHEN_AUTHORIZED
+    configprops:
+      #roles: MONITORING
+      show-values: ALWAYS
     gateway:
       enabled: true
   security:
