@@ -3,4 +3,4 @@
 ##################################################
 auth:
   security:
-    public_key_path: file:../ejetool-account-api/src/main/resources/keys/serivce_auth.pub
+    public_key_path: file:../ejetool-account-api/keys/serivce_auth.pub
