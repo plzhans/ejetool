@@ -21,3 +21,26 @@ bootJar {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// openApi { 
+// 	def packageName = 'ejetool-account-api'
+	
+// 	def outputPath = project.findProperty('outputDir') ?: buildDir
+// 	def serverUrl = project.findProperty('server')
+
+	
+//     apiDocsUrl.set("http://localhost:8080/videoai/docs/openapi/${packageName}.json")
+// 	outputDir.set(file("$outputPath"))
+//     outputFileName.set("${packageName}.json")
+
+// 	def customArgs = ["--openapi"]
+// 	if (serverUrl) {
+// 		customArgs << "--springdoc.api-servers=${serverUrl}"
+// 	}
+// 	customBootRun {
+// 		args.set(customArgs)
+// 	}
+
+// 	println "output: ${outputPath}/${packageName}.json"
+// 	waitTimeInSeconds.set(5)
+// }
