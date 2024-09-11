@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.StringUtils;
 
 import com.ejetool.jwt.generator.JwtKeyStoreValidator;
-
+import com.ejetool.account.api.controller.AuthController;
 import com.ejetool.account.api.filter.CustomAccessDeniedHandler;
 import com.ejetool.account.api.filter.CustomAuthenticationEntryPoint;
 import com.ejetool.account.api.filter.JwtAuthenticationFilter;
@@ -31,7 +31,11 @@ public class SecurityConfig{
     @Value("${management.endpoints.web.base-path:/actuator}")
     private String managementBasePath;
 
-    private static final String[] ALLOWED_URLS = {"/", "/error", "/signup", "/signin"};
+    private static final String[] ALLOWED_URLS = {
+        "/", "/error", "/signup", "/signin", 
+        AuthController.Const.PATH_GET_KEYS_PUBLIC
+    };
+    
     private static final String[] SWAGGER_URLS = {"/docs","/docs/**","/docs/swagger-ui/**"};
     
     @Bean
@@ -53,7 +57,8 @@ public class SecurityConfig{
                 if(StringUtils.hasText(managementBasePath)){
                     registry.requestMatchers(new String[]{managementBasePath, managementBasePath+"/**"}).permitAll();
                 }
-                registry.anyRequest().authenticated();
+                //registry.anyRequest().authenticated();
+                registry.anyRequest().permitAll();
             })
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

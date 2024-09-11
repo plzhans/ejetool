@@ -1,22 +1,28 @@
 package com.ejetool.account.service.application;
 
+import java.security.PublicKey;
+import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.ejetool.account.service.application.interfaces.AuthService;
 import com.ejetool.account.service.dto.auth.GetPublicKeyListResult;
 import com.ejetool.account.service.dto.auth.PublicKeyDto;
 import com.ejetool.jwt.generator.JwtKeyStoreGenerator;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.security.Key;
-import java.util.Base64;
-
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
+@Service
 public class AuthServiceImpl implements AuthService {
-
+    
+    private final String issuer;
     private final JwtKeyStoreGenerator jwtKeyStoreGenerator;
+
+    public AuthServiceImpl(@Value("${auth.security.issuer}") String issuer, JwtKeyStoreGenerator jwtKeyStoreGenerator){
+        this.issuer = issuer;
+        this.jwtKeyStoreGenerator = jwtKeyStoreGenerator;
+    }
 
     private String prettyFormat(String input, int lineLength, String newLine) {
         StringBuilder result = new StringBuilder();
@@ -30,23 +36,23 @@ public class AuthServiceImpl implements AuthService {
         result.append("-----END PUBLIC KEY-----");
         return result.toString();
     }
+    
     @Override
-    public GetPublicKeyListResult getPublicKeys() {
-        List<PublicKeyDto> publicKeys = this.jwtKeyStoreGenerator.getStore().entrySet().stream()
+    public GetPublicKeyListResult getPublicKeyList() {
+        List<PublicKeyDto> keys = this.jwtKeyStoreGenerator.getPublicKeyMap().entrySet().stream()
             .map(entry -> {
-                Key key = entry.getValue();
+                PublicKey key = entry.getValue();
                 String publicKeyString = Base64.getEncoder().encodeToString(key.getEncoded());
                 publicKeyString = prettyFormat(publicKeyString, 64, "\\n");
                 return PublicKeyDto.builder()
                     .id(entry.getKey())
-                    .algorithm(key.getAlgorithm())
-                    .foramt(key.getFormat())
-                    .publicKey(publicKeyString)
+                    .content(publicKeyString)
                     .build();
             })
             .collect(Collectors.toList());
         return GetPublicKeyListResult.builder()
-            .publicKeys(publicKeys)
+            .issuer(this.issuer)
+            .keys(keys)
             .build();
     }
     

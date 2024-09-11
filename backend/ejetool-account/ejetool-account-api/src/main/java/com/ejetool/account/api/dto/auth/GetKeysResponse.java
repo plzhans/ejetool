@@ -1,5 +1,6 @@
+package com.ejetool.account.api.dto.auth;
 
-package com.ejetool.account.service.dto.auth;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,12 +9,10 @@ import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class PublicKeyDto {
+public class GetKeysResponse {
+    @Getter
+    private final String issuer;
 
     @Getter
-    private final String id;
-
-    @Getter
-    private final String content;
-
+    private final List<PublicKeyData> keys;
 }

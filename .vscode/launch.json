@@ -32,6 +32,16 @@
         },
         {
             "type": "java",
+            "name": "ejetool-account-api",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "com.ejetool.account.api.EjetoolAccountApiApplication",
+            "projectName": "ejetool-account-api",
+            "args": "",
+            "envFile": "${workspaceFolder}/backend/debug.env",
+        },
+        {
+            "type": "java",
             "name": "ejetool-admin-spring",
             "request": "launch",
             "cwd": "${workspaceFolder}/backend",

@@ -1,11 +1,5 @@
 
-### xx1
-GET http://127.0.0.1:8080/contents
-content-type: application/json
+### /auth/publikc-keys
+GET http://localhost:8081/auth/public-keys
 
-{
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
-}
-
-### x2
+### test

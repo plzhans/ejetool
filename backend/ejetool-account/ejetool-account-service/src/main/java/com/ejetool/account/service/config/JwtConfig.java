@@ -43,6 +43,10 @@ public class JwtConfig {
         @Getter @Setter
         @Value("${auth.security.private_key_path}")
         private String privateKeyPath;
+
+        @Getter @Setter
+        @Value("${auth.security.public_key_path}")
+        private String publicKeyPath;
     }
     private final AuthSecuritySettings settings;
 

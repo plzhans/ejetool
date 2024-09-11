@@ -8,12 +8,16 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.AsymmetricKey;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import javax.crypto.SecretKey;
 
 import com.ejetool.common.crypto.rsa.RSAKeyGenerator;
@@ -25,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtKeyStoreGenerator{
 
     @Getter
-    private final Map<String,Key> store;
+    private final Map<String, Key> store;
 
     @Getter
-    private final Map<JwtKeyType, String> typeMap;
+    private final Map<JwtKeyType, List<String>> typeMap;
 
     public static JwtKeyStoreGenerator build(Consumer<JwtKeyStoreGeneratorOptions> options){
         var jwtKeyStoreGeneratorOptions = new JwtKeyStoreGeneratorOptions();
@@ -39,6 +43,23 @@ public class JwtKeyStoreGenerator{
     public JwtKeyStoreGenerator(JwtKeyStoreGeneratorOptions options){
         this.store = new HashMap<>();
         this.typeMap = new EnumMap<>(JwtKeyType.class);
+    }
+
+    public Map<String, PublicKey> getPublicKeyMap(){
+        return this.store.entrySet().stream()
+            .filter(entry -> entry.getValue() instanceof PublicKey || entry.getValue() instanceof PrivateKey)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey, 
+                entry -> {
+                    Key key = entry.getValue();
+                    if (key instanceof PublicKey publicKey) {
+                        return publicKey;
+                    } else if (key instanceof PrivateKey privateKey) {
+                        return RSAKeyGenerator.generatePublicKey(privateKey);
+                    }
+                    throw new IllegalArgumentException("Unexpected key type: " + key.getClass());
+                }
+            ));
     }
 
     public void addSecretKey(String secret){
@@ -93,9 +114,9 @@ public class JwtKeyStoreGenerator{
             throw new IllegalArgumentException("Key with id " + kid + " already exists.");
         }
         this.store.put(kid, key);
-        if(!this.typeMap.containsKey(keyType)){
-            this.typeMap.put(keyType, kid);
-        }
+        this.typeMap
+            .computeIfAbsent(keyType, k->new ArrayList<>())
+            .add(kid);
     }
 
     public JwtBuilder builder(JwtKeyType keyType, String sub){
@@ -103,10 +124,9 @@ public class JwtKeyStoreGenerator{
             .setSubject(sub);
     }
 
-
     public JwtBuilder builder(JwtKeyType keyType){
-        String kid = typeMap.get(keyType);
-        return builder(kid);
+        List<String> kids = typeMap.get(keyType);
+        return builder(kids.get(0));
     }
 
     public JwtBuilder builder(String kid){

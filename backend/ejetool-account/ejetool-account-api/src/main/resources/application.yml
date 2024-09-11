@@ -12,6 +12,8 @@ spring:
       - classpath:management.yml
       - classpath:sentry.yml
       - classpath:openapi.yml
+  jackson:
+    property-naming-strategy: SNAKE_CASE
   jpa:
     hibernate:
       # values: none, create, create-drop, update, validate
@@ -32,7 +34,6 @@ spring:
     redis:
       host: localhost
       port: 21102
-
 
 ##################################################
 # auth

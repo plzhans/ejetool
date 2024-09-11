@@ -7,8 +7,6 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.core.io.Resource;
@@ -17,11 +15,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import com.ejetool.account.service.config.JwtConfig.AuthSecuritySettings;
 import com.ejetool.common.io.support.YamlPropertySourceFactory;
 import com.ejetool.jwt.generator.JwtKeyStoreGenerator;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.ejetool.jwt.generator.JwtKeyStoreValidator;
 
 @SpringJUnitConfig(ProjectServiceTest.Config.class)
 @TestPropertySource(locations = {
@@ -37,42 +34,35 @@ public class AuthServiceImplTest {
         
     }
 
-    @Getter @Setter
-    @ConfigurationProperties("auth.security")
-    static class AuthSecuritySettings{
-
-        @Value("${auth.security.issuer}")
-        private String issuer;
-
-        @Value("${auth.security.public_key_path}")
-        private String publicKeyPath;
-    }
-
-     @Autowired
+    @Autowired
     private AuthSecuritySettings settings;
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     private JwtKeyStoreGenerator jwtKeyStoreGenerator() throws IOException{
-        Resource resourcePublic = resourceLoader.getResource(this.settings.getPublicKeyPath());
-        JwtKeyStoreGenerator generator = JwtKeyStoreGenerator.build(o->o.setIssuer(this.settings.getIssuer()));
-        generator.addPublicKeyPath(resourcePublic.getFile().toPath(), "s");
+        Resource resourcePrivate = resourceLoader.getResource(this.settings.getPrivateKeyPath());
+        JwtKeyStoreGenerator generator = JwtKeyStoreGenerator.build(o->{
+            o.setIssuer(this.settings.getIssuer());
+        });
+        generator.addPrivateKeyPath(resourcePrivate.getFile().toPath());
+        generator.addSecretKey(this.settings.getSecret(), "s");
         return generator;
     }
 
     @Test
-    void getPublicKeys_ok() throws IOException {
-        Resource resourcePublic = resourceLoader.getResource(this.settings.getPublicKeyPath());
+    void getPublicKeyList__ok() throws IOException {
+        Resource publicKeyPath = resourceLoader.getResource(this.settings.getPublicKeyPath());
 
-        String fileText = Files.readString(resourcePublic.getFile().toPath());
-        fileText = fileText.replace("\n", "\\n");
+        String publicKeyString = Files.readString(publicKeyPath.getFile().toPath());
+        publicKeyString = publicKeyString.replace("\n", "\\n");
 
-        var service = new AuthServiceImpl(jwtKeyStoreGenerator());
-        var result = service.getPublicKeys();
+        var service = new AuthServiceImpl(this.settings.getIssuer(), jwtKeyStoreGenerator());
+        var result = service.getPublicKeyList();
         
-        assertEquals(result.getPublicKeys().get(0).getId(), "s");
-        assertEquals(result.getPublicKeys().get(0).getPublicKey(), fileText);
+        assertEquals(result.getIssuer(), this.settings.getIssuer());
+        assertEquals(result.getKeys().get(0).getId(), JwtKeyStoreValidator.DEFAULT_KID);
+        assertEquals(result.getKeys().get(0).getContent(), publicKeyString);
     }
 
 }
