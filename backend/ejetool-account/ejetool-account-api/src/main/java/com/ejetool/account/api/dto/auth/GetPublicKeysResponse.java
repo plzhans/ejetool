@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class GetKeysResponse {
+public class GetPublicKeysResponse {
     @Getter
     private final String issuer;
 

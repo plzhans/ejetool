@@ -4,7 +4,7 @@ package com.ejetool.account.api.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ejetool.account.api.dto.auth.GetKeysResponse;
+import com.ejetool.account.api.dto.auth.GetPublicKeysResponse;
 import com.ejetool.account.api.mapper.AuthMapper;
 import com.ejetool.account.service.application.interfaces.AuthService;
 import com.ejetool.account.service.dto.auth.GetPublicKeyListResult;
@@ -40,7 +40,7 @@ public class AuthController {
      */
     @Operation(summary = "공개키 목록", description = "공개키 생성")
     @GetMapping(Const.PATH_GET_KEYS_PUBLIC)
-    public GetKeysResponse getPublickKeys() {
+    public GetPublicKeysResponse getPublickKeys() {
         GetPublicKeyListResult result = service.getPublicKeyList();
         return mapper.to(result);
     }

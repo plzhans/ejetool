@@ -45,7 +45,7 @@ public class AuthControllerTest {
             .issuer(issuer)
             .keys(Arrays.asList(PublicKeyDto.builder()
                 .id("id")
-                .content("key")
+                .content("content")
                 .build()))
             .build();
         
@@ -54,7 +54,7 @@ public class AuthControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(AuthController.Const.PATH_GET_KEYS_PUBLIC))
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andExpect(MockMvcResultMatchers.jsonPath("$.issuer").value(issuer))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.public_keys[0].id").value("id"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.public_keys[0].key").value("key"));
+               .andExpect(MockMvcResultMatchers.jsonPath("$.keys[0].id").value("id"))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.keys[0].content").value("content"));
     }
 }
